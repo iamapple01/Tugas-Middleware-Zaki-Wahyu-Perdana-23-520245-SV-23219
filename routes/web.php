@@ -33,6 +33,9 @@ Route::delete('/buku/{id}', [BukuController::class, 'destroy'])->name('buku.dest
 
 Route::post('/buku/{id}/update', [BukuController::class, 'update'])->name('buku.update');
 
+Route::get('/buku/{id}/edit', [BukuController::class, 'edit'])->name('buku.edit');
+
+Route::post('/upload', [BukuController::class, 'upload'])->name('buku.upload');
 
 Route::controller(LoginRegisterController::class)->group(function() {
    Route::get('/register', 'register')->name('register');
@@ -48,7 +51,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [LoginRegisterController::class, 'logout'])->name('logout');
 });
 Route::middleware(['admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/admin/dashboard', [UserController::class, 'dashboard'])->name('admin.dashboard');
 });
 
 Route::middleware(['guest'])->group(function () {

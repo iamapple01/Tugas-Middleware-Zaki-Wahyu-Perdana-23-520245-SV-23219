@@ -12,7 +12,6 @@
             </a>
         </div>
     </div>
-
     <div class="card shadow mx-3">
         <div class="card-body">
             <div class="table-responsive">
@@ -24,6 +23,7 @@
                             <th scope="col">Penulis</th>
                             <th scope="col">Harga</th>
                             <th scope="col">Tanggal Terbit</th>
+                            <th scope="col">Cover</th>
                             <th scope="col" class="text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -35,12 +35,24 @@
                             <td class="align-middle px-3">{{ $buku->penulis }}</td>
                             <td class="align-middle px-3">{{ "Rp. ".number_format($buku->harga, 2, ',', '.') }}</td>
                             <td class="align-middle px-3">{{ (new DateTime($buku->tgl_terbit))->format('d/m/Y') }}</td>
+                            <td>
+                                @if ($buku->filepath)
+                                <div class="relative h-10 w-10">
+                                    <img
+                                        class="h-full w-full rounded-full object-cover object-center"
+                                        src="{{ asset($buku->filepath) }}"
+                                        alt="Cover"
+                                    />
+                                </div>
+                                @else
+                                    No Cover
+                                @endif
+                            </td>
                             <td class="text-center px-3">
                                 <div class="btn-group gap-2" role="group">
-                                    <a href="{{ route('buku.update', $buku->id) }}" 
-                                    class="btn btn-sm btn-warning">
-                                        <i class="fas fa-edit me-1"></i> Edit
-                                    </a>
+                                <form action="{{ route('buku.edit', $buku->id) }}" method="GET">
+                                    <button type="submit" class="btn btn-primary w-100">Edit</button>
+                                </form>
                                     <form action="{{ route('buku.destroy', $buku->id) }}" 
                                         method="POST" 
                                         class="d-inline">
@@ -52,6 +64,11 @@
                                             <i class="fas fa-trash me-1"></i> Hapus
                                         </button>
                                     </form>
+                                    <form action="/upload" method="POST" enctype="multipart/form-data">
+                                        <input type="file" name="thumbnail">
+                                        <button type="submit">Upload</button>
+                                    </form>
+
                                 </div>
                             </td>
                         </tr>
