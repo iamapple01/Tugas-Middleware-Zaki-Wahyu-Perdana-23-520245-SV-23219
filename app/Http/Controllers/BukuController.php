@@ -41,27 +41,33 @@ class BukuController extends Controller
      */
     public function store(Request $request)
     {
+        // Validasi data yang diterima dari klien
         $request->validate([
-            'judul' => 'required|string',
-            'penulis' => 'required|string|max:30',
-            'harga' => 'required|numeric',
+            'judul' => 'required|string|max:255',
+            'penulis' => 'required|string|max:255',
+            'harga' => 'required|integer|min:0',
             'tgl_terbit' => 'required|date',
             'thumbnail' => 'image|mimes:jpeg,jpg,png|max:2048'
         ]);
 
+        // Inisialisasi variabel untuk menyimpan nama file dan path
         $filename = null;
         $filepath = null;
 
+        // Jika ada file thumbnail yang diunggah
         if ($request->hasFile('thumbnail')) {
+            // Simpan file thumbnail ke storage
             $filename = time().'-' . $request->thumbnail->getClientOriginalName();
             $filepath = $request->file('thumbnail')->storeAs('uploads', $filename, 'public');
+
+            // Resize gambar menggunakan Intervention Image
+            Image::make(storage_path('app/public/uploads/' . $filename))
+                ->fit(240, 320)
+                ->save();
         }
 
-        Image::make(storage_path('app/public/uploads/' . $filename))
-            ->fit(240, 320)
-            ->save();
-
-        Buku::create([
+        // Simpan data buku ke database
+        $buku = Buku::create([
             'judul' => $request->judul,
             'penulis' => $request->penulis,
             'harga' => $request->harga,
@@ -70,8 +76,20 @@ class BukuController extends Controller
             'filepath' => $filepath ? '/storage/' . $filepath : null,
         ]);
 
-        return redirect('/buku')->with('pesanstore', 'Buku berhasil ditambahkan!');
+        // Periksa apakah permintaan berasal dari AJAX
+        if ($request->ajax()) {
+            // Kembalikan respon JSON
+            return response()->json([
+                'status' => true,
+                'message' => 'Buku berhasil ditambahkan',
+                'data' => $buku
+            ], 201);
+        }
+
+        // Jika bukan permintaan AJAX, arahkan kembali ke halaman utama
+        return redirect('/buku')->with('success', 'Buku berhasil ditambahkan');
     }
+
     /**
      * Display the specified resource.
      */

@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::create('books', function (Blueprint $table)  {
+    Schema::create('buku', function (Blueprint $table)  {
         $table->id();
         $table->string('judul');
         $table->string('penulis');
         $table->integer('harga');
         $table->date('tgl_terbit');
+        $table->string('filename')->nullable();
+        $table->string('filepath')->nullable();
         $table->timestamps();
     });
     }

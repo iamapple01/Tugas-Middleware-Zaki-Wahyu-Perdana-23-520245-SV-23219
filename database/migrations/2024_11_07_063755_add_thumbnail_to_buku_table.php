@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('buku', function (Blueprint $table) {
-            $table->string('filename')->nullable();
-            $table->string('filepath')->nullable();
+            if (!Schema::hasColumn('buku', 'filename')) {
+                $table->string('filename')->nullable();
+            }
+            if (!Schema::hasColumn('buku', 'filepath')) {
+                $table->string('filepath')->nullable();
+            }
         });
     }
 
@@ -23,8 +27,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('buku', function (Blueprint $table) {
-            $table->dropColumn('filename');
-            $table->dropColumn('filepath');
+            if (Schema::hasColumn('buku', 'filename')) {
+                $table->dropColumn('filename');
+            }
+            if (Schema::hasColumn('buku', 'filepath')) {
+                $table->dropColumn('filepath');
+            }
         });
     }
 };

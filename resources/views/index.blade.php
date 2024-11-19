@@ -14,6 +14,11 @@
     </div>
     <div class="card shadow mx-3">
         <div class="card-body">
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="table-responsive">
                 <table class="table table-hover table-striped">
                     <thead class="table-dark">

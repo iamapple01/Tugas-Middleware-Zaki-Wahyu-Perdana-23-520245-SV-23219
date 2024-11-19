@@ -51,10 +51,10 @@
                 .catch(error => console.error('Error:', error));
         }
 
-        // Fungsi untuk menampilkan data buku di halaman
+
         function displayBooks(books) {
             const bookList = document.getElementById('bookList');
-            bookList.innerHTML = ''; // Kosongkan data sebelumnya
+            bookList.innerHTML = ''; 
 
             books.forEach(book => {
                 const bookItem = document.createElement('div');
@@ -69,10 +69,10 @@
             });
         }
 
-        // Fungsi untuk menampilkan tautan pagination
+
         function displayPagination(links) {
             const pagination = document.getElementById('pagination');
-            pagination.innerHTML = ''; // Kosongkan data pagination sebelumnya
+            pagination.innerHTML = ''; 
 
             links.forEach(link => {
                 const pageLink = document.createElement('a');
@@ -93,7 +93,7 @@
             });
         }
 
-        // Panggil fetchBooks pertama kali untuk halaman pertama
+
         fetchBooks(currentPage);
     </script>
 
