@@ -16,6 +16,10 @@ use App\Models\Buku;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/consume-api', function () {
+    return view('consume-api');
+});
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -46,15 +50,3 @@ Route::controller(LoginRegisterController::class)->group(function() {
    Route::post('/logout', 'logout')->name('logout');
 });
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [LoginRegisterController::class, 'dashboard'])->name('dashboard');
-    Route::post('/logout', [LoginRegisterController::class, 'logout'])->name('logout');
-});
-Route::middleware(['admin'])->group(function () {
-    Route::get('/admin/dashboard', [UserController::class, 'dashboard'])->name('admin.dashboard');
-});
-
-Route::middleware(['guest'])->group(function () {
-    Route::get('/login', [LoginRegisterController::class, 'login'])->name('login');
-    Route::get('/register', [LoginRegisterController::class, 'register'])->name('register');
-});

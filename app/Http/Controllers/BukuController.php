@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
 use App\Models\Buku;
 use App\Models\Gallery; // Import Gallery model
-use Image; // Import Image class
+
+
 
 class BukuController extends Controller
 {
@@ -40,16 +41,37 @@ class BukuController extends Controller
      */
     public function store(Request $request)
     {
-        $buku = new Buku();
-        $buku->judul = $request->judul;
-        $buku->penulis = $request->penulis;
-        $buku->harga = $request->harga;
-        $buku->tgl_terbit = $request->tgl_terbit;
-        $buku->save();
+        $request->validate([
+            'judul' => 'required|string',
+            'penulis' => 'required|string|max:30',
+            'harga' => 'required|numeric',
+            'tgl_terbit' => 'required|date',
+            'thumbnail' => 'image|mimes:jpeg,jpg,png|max:2048'
+        ]);
 
-        return redirect('/buku');
+        $filename = null;
+        $filepath = null;
+
+        if ($request->hasFile('thumbnail')) {
+            $filename = time().'-' . $request->thumbnail->getClientOriginalName();
+            $filepath = $request->file('thumbnail')->storeAs('uploads', $filename, 'public');
+        }
+
+        Image::make(storage_path('app/public/uploads/' . $filename))
+            ->fit(240, 320)
+            ->save();
+
+        Buku::create([
+            'judul' => $request->judul,
+            'penulis' => $request->penulis,
+            'harga' => $request->harga,
+            'tgl_terbit' => $request->tgl_terbit,
+            'filename' => $filename,
+            'filepath' => $filepath ? '/storage/' . $filepath : null,
+        ]);
+
+        return redirect('/buku')->with('pesanstore', 'Buku berhasil ditambahkan!');
     }
-
     /**
      * Display the specified resource.
      */
