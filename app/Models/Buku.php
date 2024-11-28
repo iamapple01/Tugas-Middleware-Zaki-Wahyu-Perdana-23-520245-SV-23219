@@ -22,4 +22,12 @@ class Buku extends Model
     {
         return $this->hasMany(Gallery::class);
     }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'buku_tag');
+    }
 }

@@ -10,6 +10,9 @@
             <a href="{{ route('create') }}" class="btn btn-primary me-3">
                 <i class="fas fa-plus"></i> Tambah Buku
             </a>
+            <a href="{{ route('reviews.index') }}" class="btn btn-secondary me-3">
+                <i class="fas fa-list"></i> Daftar Review
+            </a>
         </div>
     </div>
     <div class="card shadow mx-3">
@@ -29,7 +32,7 @@
                             <th scope="col">Harga</th>
                             <th scope="col">Tanggal Terbit</th>
                             <th scope="col">Cover</th>
-                            <th scope="col" class="text-center">Aksi</th>
+                            <th scope="col">Tags</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,11 +72,8 @@
                                             <i class="fas fa-trash me-1"></i> Hapus
                                         </button>
                                     </form>
-                                    <form action="/upload" method="POST" enctype="multipart/form-data">
-                                        <input type="file" name="thumbnail">
-                                        <button type="submit">Upload</button>
-                                    </form>
-
+</form>
+                                    <a href="{{ route('buku.review', $buku->id) }}" class="btn btn-sm btn-info ms-2">Review</a>
                                 </div>
                             </td>
                         </tr>

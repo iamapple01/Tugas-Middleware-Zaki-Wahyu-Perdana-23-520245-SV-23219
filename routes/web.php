@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\BukuController;
 use App\Models\Buku;
+use App\Http\Controllers\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,7 @@ Route::get('/consume-api', function () {
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::get('/post', [PostController::class, 'index']);
@@ -39,7 +40,16 @@ Route::post('/buku/{id}/update', [BukuController::class, 'update'])->name('buku.
 
 Route::get('/buku/{id}/edit', [BukuController::class, 'edit'])->name('buku.edit');
 
-Route::post('/upload', [BukuController::class, 'upload'])->name('buku.upload');
+Route::get('/buku/{id}/review', [BukuController::class, 'review'])->name('buku.review');
+
+Route::post('/buku/{id}/review', [BukuController::class, 'storeReview'])->name('buku.storeReview');
+
+Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+
+Route::get('/reviews/create', [ReviewController::class, 'create'])->name('reviews.create');
+
+Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+
 
 Route::controller(LoginRegisterController::class)->group(function() {
    Route::get('/register', 'register')->name('register');

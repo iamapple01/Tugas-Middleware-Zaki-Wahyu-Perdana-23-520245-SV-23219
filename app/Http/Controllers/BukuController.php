@@ -5,6 +5,8 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
 use App\Models\Buku;
 use App\Models\Gallery; // Import Gallery model
+use App\Models\Review;
+use App\Models\Tag;
 
 
 
@@ -182,4 +184,36 @@ class BukuController extends Controller
         return back()->with('success', 'Gambar berhasil diunggah!');
     }
 
+    // Metode untuk menampilkan halaman review
+    public function review($id)
+    {
+        $buku = Buku::findOrFail($id);
+        return view('review', compact('buku'));
+    }
+
+    public function storeReview(Request $request, $id)
+    {
+        $request->validate([
+            'review' => 'required|string',
+            'tags' => 'nullable|array',
+            'tags.*' => 'nullable|string',
+        ]);
+
+        $buku = Buku::findOrFail($id);
+        $review = $buku->reviews()->create([
+            'review' => $request->review,
+        ]);
+        
+        if ($request->tags) {
+            foreach ($request->tags as $tagName) {
+                $tagName = trim($tagName);
+                $tag = Tag::firstOrCreate(['name' => $tagName]);
+                $review->tags()->attach($tag);
+            }
+        }
+
+        return redirect()->route('buku.index')->with('success', 'Review berhasil ditambahkan');
+    }
 }
+
+
